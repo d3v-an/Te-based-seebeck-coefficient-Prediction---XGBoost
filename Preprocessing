@@ -1,0 +1,40 @@
+#Visualizing the raw data using Histogram, box plot and correlation heatmap. This step very crucial considering we have to have an idea of those features that
+have outlier and how skewed the data is:
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load your raw dataset
+df = pd.read_csv(r"C:\Users\d3vo1\Desktop\data\Clean_1_nan.csv")
+
+# Select numeric columns only (skip strings like 'formula')
+numeric_cols = df.select_dtypes(include=[float, int]).columns
+
+# Drop rows with too many missing values (optional early cleanup)
+df = df[numeric_cols].dropna()
+
+# 1. Histograms
+# Plot only selected columns
+selected_cols = ['energy_above_hull', 'volume']
+df[selected_cols].hist(bins=30, figsize=(10, 4), edgecolor='black')
+
+# Add title and layout
+plt.suptitle('Histograms of energy_above_hull and volume', fontsize=14)
+plt.tight_layout()
+plt.show()
+
+# 2. Box plots
+plt.figure(figsize=(15, 8))
+df[numeric_cols].boxplot(rot=45)
+plt.title("Box Plot of Features (Detecting Outliers)")
+plt.tight_layout()
+plt.show()
+
+# 3. Correlation heatmap
+plt.figure(figsize=(12, 10))
+corr = df[numeric_cols].corr()
+sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f", square=True)
+plt.title("Feature Correlation Heatmap")
+plt.show()
